@@ -1,12 +1,12 @@
 'use client';
-import UserItem from '@/components/Users/UserItem';
-import { instance } from '@/lib/api';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { MdClose, MdSearch } from 'react-icons/md';
-import Navigation from '@/components/Navigation';
 import { io } from 'socket.io-client';
-import React from 'react';
+import Navigation from '@/components/Navigation';
+import { instance } from '@/lib/api';
+import UserItem from '@/components/Users/UserItem';
 
 interface User {
   id: string;
@@ -39,7 +39,7 @@ const Users = () => {
     getUsers();
   }, []);
 
-  /**사용자 검색 */
+  /** 사용자 검색 */
   const [userInput, setUserInput] = useState('');
   const getInputValue = React.useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setUserInput(e.target.value);
@@ -153,7 +153,7 @@ const NoUserText = styled.h2`
   font-size: ${({ theme }) => theme.fontSize.xl};
 `;
 
-/**사용자 검색 */
+/** 사용자 검색 */
 const SearchUserBox = styled.div`
   background-color: white;
 

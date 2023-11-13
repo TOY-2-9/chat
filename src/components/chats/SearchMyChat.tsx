@@ -1,9 +1,10 @@
 'use client';
+
 import React, { useCallback, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
-import { allChatsState, myChatsState, searchChatsState } from './chatsStore';
 import { MdSearch } from 'react-icons/md';
+import { allChatsState, myChatsState, searchChatsState } from './chatsStore';
 
 const SearchMyChat = ({ userType }: any) => {
   const [input, setInput] = useState<string>('');

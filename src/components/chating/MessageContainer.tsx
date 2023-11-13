@@ -2,8 +2,8 @@
 
 import styled from 'styled-components';
 import React, { useState } from 'react';
-import SendArrow from '../../../public/assets/sendArrow.svg';
 import { Socket } from 'socket.io-client';
+import SendArrow from '../../../public/assets/sendArrow.svg';
 
 interface MessageContainerProps {
   socket: Socket;
