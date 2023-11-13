@@ -179,7 +179,7 @@ const SearchButton = styled.div`
   border-bottom-left-radius: 15px;
 `;
 
-export const SearchUserInput = styled.input`
+const SearchUserInput = styled.input`
   border: none;
 
   width: 32rem;
