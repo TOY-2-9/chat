@@ -3,7 +3,6 @@ import React, { useCallback, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { allChatsState, myChatsState, searchChatsState } from './chatsStore';
-import { SearchButton } from '@/app/users/page';
 import { MdSearch } from 'react-icons/md';
 
 const SearchMyChat = ({ userType }: any) => {
@@ -64,4 +63,16 @@ const SearchUserBox = styled.div`
 
   display: flex;
   gap: 3%;
+`;
+
+const SearchButton = styled.div`
+  background-color: ${({ theme }) => theme.color.mainGreen};
+  width: 5rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
 `;
