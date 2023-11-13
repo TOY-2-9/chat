@@ -167,7 +167,7 @@ const SearchUserBox = styled.div`
   gap: 3%;
 `;
 
-export const SearchButton = styled.div`
+const SearchButton = styled.div`
   background-color: ${({ theme }) => theme.color.mainGreen};
   width: 5rem;
 
