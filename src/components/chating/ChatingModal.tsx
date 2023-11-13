@@ -2,8 +2,8 @@
 
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { ChatingModalToggle } from '@/store/atoms';
 import { useRouter } from 'next/navigation';
+import { ChatingModalToggle } from '@/store/atoms';
 import InviteImg from '../../../public/assets/InviteImg.svg';
 
 interface User {
@@ -17,7 +17,7 @@ interface ChatingModalProps {
   chatId: string;
 }
 
-//type
+// type
 export default function ChatingModal(props: ChatingModalProps) {
   const [modalToggle, setModalToggle] = useRecoilState<boolean>(ChatingModalToggle);
   const router = useRouter();
@@ -82,7 +82,7 @@ export default function ChatingModal(props: ChatingModalProps) {
           opacity: `${modalToggle ? '1' : '0'}`,
         }}
         onClick={() => setModalToggle(!modalToggle)}
-      ></ModalBackground>
+      />
     </>
   );
 }

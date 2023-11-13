@@ -1,17 +1,17 @@
 'use client';
 
 import styled from 'styled-components';
-import Back from '../../../public/assets/back.svg';
-import Menu from '../../../public/assets/menu.svg';
 import { useRouter } from 'next/navigation';
 import { useRecoilState } from 'recoil';
+import Back from '../../../public/assets/back.svg';
+import Menu from '../../../public/assets/menu.svg';
 import { ChatingModalToggle } from '@/store/atoms';
 
 interface ChatingNaviagtionProps {
   chatName: string;
 }
 
-//props type
+// props type
 export default function ChatingNavigation(props: ChatingNaviagtionProps) {
   const [modalToggle, setModalToggle] = useRecoilState<boolean>(ChatingModalToggle);
 

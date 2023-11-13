@@ -2,9 +2,9 @@
 
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
-import MessageContainer from './MessageContainer';
 import io from 'socket.io-client';
 import { usePathname } from 'next/navigation';
+import MessageContainer from './MessageContainer';
 import ChatingNavigation from './ChatingNavigation';
 import ChatingModal from './ChatingModal';
 import { formatCreatedAt } from '../chats/useFormatCreatedAt';
