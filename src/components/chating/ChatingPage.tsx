@@ -99,7 +99,7 @@ export default function ChatingPage() {
       console.log('Socket disconnected');
     });
 
-    socket.emit('users');
+    // socket.emit('users');
 
     // socket.on('users-to-client', (data) => {
     //     console.log(data, 'users-to-client');
