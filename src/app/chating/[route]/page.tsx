@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import ChatingPage from '../../../components/chating/ChatingPage';
 
