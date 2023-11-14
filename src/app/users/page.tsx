@@ -1,12 +1,11 @@
 'use client';
 import UserItem from '@/components/Users/UserItem';
 import { instance } from '@/lib/api';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { MdClose, MdSearch } from 'react-icons/md';
 import Navigation from '@/components/Navigation';
 import { io } from 'socket.io-client';
-import React from 'react';
 
 interface User {
   id: string;
@@ -55,7 +54,7 @@ const Users = () => {
     users: [],
   });
   const [connectUserIdList, setConnectUserIdList] = useState<ConnectUserIdList>({ users: [] });
-  const accessToken = sessionStorage.getItem('accessToken');
+  const accessToken = typeof window !== 'undefined' ? sessionStorage.getItem('accessToken') : null;
 
   const socket = io(`https://fastcampus-chat.net/server`, {
     extraHeaders: {

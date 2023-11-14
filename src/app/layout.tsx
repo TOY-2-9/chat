@@ -21,16 +21,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   /** 접속 유저 검색 */
   const accessToken = typeof window !== 'undefined' ? sessionStorage.getItem('accessToken') : null;
 
-  // const socket = io(`https://fastcampus-chat.net/server`, {
-  //   extraHeaders: {
-  //     Authorization: `Bearer ${accessToken}`,
-  //     serverId: `${process.env.NEXT_PUBLIC_SERVER_KEY}`,
-  //   },
-  // });
+  const socket = io(`https://fastcampus-chat.net/server`, {
+    extraHeaders: {
+      Authorization: `Bearer ${accessToken}`,
+      serverId: `${process.env.NEXT_PUBLIC_SERVER_KEY}`,
+    },
+  });
 
-  // useEffect(() => {
-  //   socket.emit('users-server');
-  // }, []);
+  useEffect(() => {
+    socket.emit('users-server');
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
