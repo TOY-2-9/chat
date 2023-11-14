@@ -61,6 +61,8 @@ function UserSelect() {
     try {
       const selectedUserIds = selectedUsers.map(user => user.id);
 
+      const sortedUserIds = [userId, ...selectedUserIds].sort();
+
       const response = await fetch('https://fastcampus-chat.net/chat', {
         method: 'POST',
         headers: {
