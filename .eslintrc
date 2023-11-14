@@ -5,21 +5,12 @@
     "es6": true
   },
   "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaVersion": 2021,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true
-    }
-  },
-  "plugins": ["prettier", "react", "@typescript-eslint"],
+
+  "plugins": ["prettier"],
   "extends": [
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:prettier/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "eslint:recommended",
-    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
@@ -43,12 +34,6 @@
     "jsx-a11y/click-events-have-key-events": 0,
     "jsx-a11y/no-static-element-interactions": 0,
     "react/function-component-definition": "off",
-    "no-nested-ternary": "off",
-    "import/no-named-as-default": 0
-  },
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
+    "no-nested-ternary": "off"
   }
 }
