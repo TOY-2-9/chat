@@ -1,10 +1,25 @@
 {
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
   "parser": "@typescript-eslint/parser",
-  "plugins": ["prettier"],
+  "parserOptions": {
+    "ecmaVersion": 2021,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": ["prettier", "react", "@typescript-eslint"],
   "extends": [
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "eslint:recommended",
+    "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
@@ -12,6 +27,7 @@
     "no-unused-expressions": "off",
     "linebreak-style": 0,
     "import/prefer-default-export": 0,
+    "import/named": 0,
     "prettier/prettier": 0,
     "import/extensions": 0,
     "no-use-before-define": 0,
@@ -21,10 +37,18 @@
     "no-shadow": 0,
     "react/prop-types": 0,
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+    "import/no-named-as-default": 0, // Disable the warning for using exported names as default
+    "@typescript-eslint/no-unused-vars": ["error", { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }],
     "jsx-a11y/no-noninteractive-element-interactions": 0,
     "jsx-a11y/click-events-have-key-events": 0,
     "jsx-a11y/no-static-element-interactions": 0,
     "react/function-component-definition": "off",
-    "no-nested-ternary": "off"
+    "no-nested-ternary": "off",
+    "import/no-named-as-default": 0
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
