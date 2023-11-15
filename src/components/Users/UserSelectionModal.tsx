@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { getCookie } from '@/lib/cookie';
 
 interface User {
     id: string;
@@ -22,8 +23,10 @@ export const UserSelectionModal = ({ user, onUserSelect }: UserSelectionModalPro
     const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
 
     const [newChatId, setNewChatId] = useState<string | null>(null);
-    const accessToken = sessionStorage.getItem('accessToken');
-    const userId = sessionStorage.getItem('userId');
+    const accessToken = getCookie('accessToken');
+//   const accessToken = sessionStorage.getItem('accessToken');
+//   const userId = typeof window !== 'undefined' ? sessionStorage.getItem('userId') : null;
+    const userId = getCookie('userId');
 
     const [isPrivate, setIsPrivate] = useState(true); 
     const [showModal, setShowModal] = useState(false);
