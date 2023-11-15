@@ -1,31 +1,42 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { getCookie } from '@/lib/cookie';
 
 // components
 import RegisterForm from '@/components/Register/RegisterForm';
 
 const page = () => {
-    const accessToken = sessionStorage.getItem('accessToken');
+  const [isRightWay, setIsRightWay] = useState<boolean>(false);
 
-    if (accessToken) {
-        return null;
+  useEffect(() => {
+    const isUserAccess = getCookie('accessToken');
+
+    if (isUserAccess) {
+      setIsRightWay(false);
     } else {
-        return (
-            <CreatreAccountContainer>
-                <RegisterForm />
-            </CreatreAccountContainer>
-        );
+      setIsRightWay(true);
     }
+  }, []);
+
+  if (!isRightWay) {
+    return null;
+  } else {
+    return (
+      <CreatreAccountContainer>
+        <RegisterForm />
+      </CreatreAccountContainer>
+    );
+  }
 };
 
 export default page;
 
 const CreatreAccountContainer = styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

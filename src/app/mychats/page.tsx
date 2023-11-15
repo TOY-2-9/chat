@@ -1,17 +1,33 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ChatPage from '@/components/chats/ChatPage';
 import Navigation from '@/components/Navigation';
+import { getCookie } from '@/lib/cookie';
 
 const MyChats = () => {
-    const userId = typeof window !== 'undefined' ? sessionStorage.getItem('userId') : null;
+  const [isRightWay, setIsRightWay] = useState<boolean>(false);
+
+  useEffect(() => {
+    const isUserAccess = getCookie('accessToken');
+
+    if (isUserAccess) {
+      setIsRightWay(true);
+    } else {
+      setIsRightWay(false);
+    }
+  }, []);
+
+  if (!isRightWay) {
+    return null;
+  } else {
     return (
-        <>
-            <ChatPage userType="my" />
-            <Navigation />
-        </>
+      <>
+        <ChatPage userType="my" />
+        <Navigation />
+      </>
     );
+  }
 };
 
 export default MyChats;
