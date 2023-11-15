@@ -19,12 +19,25 @@ export const UserSelectionModal = ({ user, onUserSelect }: UserSelectionModalPro
     const [isHovered, setIsHovered] = useState(false);
     const [isSelected, setIsSelected] = useState(false);
 
+    const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+
+    const [newChatId, setNewChatId] = useState<string | null>(null);
+    const accessToken = sessionStorage.getItem('accessToken');
+    const userId = sessionStorage.getItem('userId');
+
+    const [isPrivate, setIsPrivate] = useState(true); 
+    const [showModal, setShowModal] = useState(false);
+    const [chatName, setChatName] = useState('');
+
+
     const { name, picture, id } = user;
 
     const handleUserClick = () => {
         onUserSelect(user);
         setIsSelected(!isSelected); // 선택 여부 토글
         console.log(user.id)
+        console.log(`${userId}와 ${user.id} 1:1 채팅방`);
+        
     };
 
     return (

@@ -5,6 +5,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { MdClose, MdSearch } from 'react-icons/md';
 import { useRouter } from 'next/navigation';
+import { Chat } from '@/components/chats/chatsStore';
 
 
 interface User {
@@ -14,6 +15,9 @@ interface User {
     picture: string;
     chats: string[];
 }
+
+
+
 
 function UserSelect() {
     const [users, setUsers] = useState<User[] | []>([]);
@@ -29,15 +33,90 @@ function UserSelect() {
     const [isPrivate, setIsPrivate] = useState(true); 
     const [showModal, setShowModal] = useState(false);
     const [chatName, setChatName] = useState('');
+    const [myChats, setMyChats] = useState<Chat[]>([]);
 
-    // 채팅방
-    const handleChatClick = () => {
+    const enterChatRoom = (chat: Chat) => {
+        if (chat.id && chat.users) {
+            const users = chat.users
+                .map((user) => `[name:${user.username}, id:${user.id}, picture:${user.picture}]`)
+                .join(',');
+            const latestMessageQuery = JSON.stringify(chat.latestMessage);
+
+            router.push(
+                `/chating/${chat.id}?name=${chat.name}&isPrivate=${
+                    chat.isPrivate
+                }&users=${users}&latestMessage=${encodeURIComponent(latestMessageQuery)}&updatedAt=${chat.updatedAt}`,
+            );
+        }
+    };
+
+    const getMyChats = async () => {
+        try {
+            const res = await instance.get<Chat[], any>(`chat`);
+            if (res) {
+                console.log(res.chats)
+                setMyChats(res.chats);
+            } else {
+                console.log('내 채팅 데이터 조회 실패');
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+  
+    useEffect(() => {
+        getMyChats()
+     }, []);
+       
+
+    const handleChatClick = async () => {
         if (selectedUsers.length === 1) {
-            createChatRoom(`${userId}와 ${selectedUsers[0].name} 1:1 채팅방`, isPrivate);
+            const selectedUser = selectedUsers[0];
+
+            const chatName = `${userId}와 ${selectedUser.name} 1:1 채팅방`;
+    
+            if (selectedUser && selectedUser.id) {
+                await getMyChats();
+
+                // const otherUserId = selectedUser.id;
+                // const existingChat = myChats.find(chat => chat.users && chat.users.some(user => user.name === otherUserId));
+
+                const existingChat = myChats.find(chat => chat.name === chatName);
+                
+
+                console.log(myChats)
+                console.log(existingChat)
+
+           
+    
+                if (existingChat) {
+                    // 이미 존재하는 채팅방으로 이동
+                    enterChatRoom(existingChat);
+                    console.log('존재하요')
+                    console.log(existingChat)
+                } else {
+                    // 채팅방이 없으면 채팅방 생성 후 이동
+                    const chatName = `${userId}와 ${selectedUser.name} 1:1 채팅방`;
+                    console.log(chatName)
+                    console.log('안돼요')
+                    const isPrivate = true;
+                    console.log(selectedUser)
+                    console.log(selectedUser.id)
+                    console.log(myChats)
+                    console.log(existingChat)
+                    createChatRoom(chatName, isPrivate)
+                 
+                }
+            } else {
+                console.error('선택된 사용자의 ID가 없습니다.');
+            }
         } else {
             setShowModal(true);
         }
     };
+    
+    
+    
     
     // 모달 닫기
     const handleCloseModal = () => {
@@ -57,38 +136,45 @@ function UserSelect() {
         setShowModal(false);
     };
 
-  const createChatRoom = async (name: string, isPrivate: boolean) => {
-    try {
-      const selectedUserIds = selectedUsers.map(user => user.id);
+    const createChatRoom = async (name: string, isPrivate: boolean) => {
+        try {
+          const selectedUserIds = selectedUsers.map((user) => user.id);
+      
+          console.log(userId, selectedUserIds);
+      
+          const sortedUserIds = [userId, ...selectedUserIds].sort();
+          const sortedUserIdsString = [userId, ...selectedUserIds].sort().join('_');
+      
+          console.log(sortedUserIds);
+      
+          const response = await fetch('https://fastcampus-chat.net/chat', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${accessToken}`,
+              'serverId': `${process.env.NEXT_PUBLIC_SERVER_KEY}`,
+            },
+            body: JSON.stringify({
+              name,
+              users: [userId, ...selectedUserIds],
+              isPrivate,
+            }),
+          });
+      
+          if (response.ok) {
+            const data = await response.json();
+            const generatedChatId = `group_${data.id}`;
+      
+            setNewChatId(generatedChatId);
+            router.push(`/chating/${data.id}`);
+          } else {
+            console.error('채팅방 생성 실패');
+          }
+        } catch (error) {
+          console.error('채팅방 생성 중 오류 발생:', error);
+        }
+      };
 
-      const sortedUserIds = [userId, ...selectedUserIds].sort();
-
-      const response = await fetch('https://fastcampus-chat.net/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-          'serverId': `${process.env.NEXT_PUBLIC_SERVER_KEY}`,
-        },
-        body: JSON.stringify({
-          name,
-          users: [userId, ...selectedUserIds],
-          isPrivate,
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        const generatedChatId = `group_${data.id}`;
-        setNewChatId(generatedChatId);
-        router.push(`/chating/${data.id}?chatId=${generatedChatId}`);
-      } else {
-        console.error('채팅방 생성 실패');
-      }
-    } catch (error) {
-      console.error('채팅방 생성 중 오류 발생:', error);
-    }
-  };
 
     const handleUserSelect = (user: User) => {
         if (selectedUsers.some(selectedUser => selectedUser.id === user.id)) {
@@ -123,7 +209,6 @@ function UserSelect() {
     const clearSearchInput = () => {
         setUserInput('');
     };
-
 
     return (
         <>
@@ -163,25 +248,29 @@ function UserSelect() {
             {showModal && (
                 <Modal>
                     <ModalContent>
-                        <h2>채팅방 정보 입력</h2>
-                        <label>채팅방 이름</label>
-                        <input
-                            type="text"
-                            value={chatName}
-                            onChange={(e) => setChatName(e.target.value)}
-                        />
+                        <h2>단체채팅 만들기</h2>
                         {selectedUsers.length > 1 && (
                             <>
-                                <label>Private</label>
+                                <label>비밀채팅방으로 만드시겠습니까?</label>
                                 <input
+                                    id='checkbox-wrapper'
                                     type="checkbox"
                                     checked={isPrivate}
                                     onChange={() => setIsPrivate(!isPrivate)}
                                 />
                             </>
                         )}
-                        <ModalButton onClick={handleCloseModal}>취소</ModalButton>
-                        <ModalButton onClick={handleGroupChatCreate}>완료</ModalButton>
+                        <input
+                            id='chatName-wrapper'
+                            type="text"
+                            value={chatName}
+                            onChange={(e) => setChatName(e.target.value)}
+                            placeholder="채팅방 이름을 입력하세요" 
+                        />
+                        <div className='button-wrapper'>
+                            <ModalButton onClick={handleCloseModal}>취소</ModalButton>
+                            <ModalButton onClick={handleGroupChatCreate}>완료</ModalButton>
+                        </div>
                     </ModalContent>
                 </Modal>
             )}
@@ -308,10 +397,6 @@ const Loading = styled.div`
     }
 `;
 const ChatButtonWrapper = styled.div`
-    position: absolute;
-    top: 3rem; /* 조절 필요한 만큼의 top 값을 주세요 */
-    right: 3rem; /* 조절 필요한 만큼의 right 값을 주세요 */
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -342,22 +427,52 @@ const Modal = styled.div`
 const ModalContent = styled.div`
   background: white;
   padding: 20px;
-  border-radius: 8px;
-  width: 300px;
-  text-align: center;
+  border-radius: 12px; 
+  width: 400px;
+  height: 280px;
+  text-align: left; 
 
   h2 {
     margin-bottom: 20px;
     color: #00956e;
   }
 
-  label {
-    display: block;
+  .checkbox-wrapper {
+    display: flex;
+    align-items: center;
     margin-top: 10px;
+    margin-bottom: 10px;
+    width: 20px;
+    height: 20px;
+
+    label {
+      margin-right: 5px; 
+      white-space: nowrap;
+    }
+
+    input {
+      margin-right: 5px;
+    }
   }
 
-  input {
-    margin-top: 5px;
+  #chatName-wrapper {
+    margin-top: 1rem;
+    width: calc(100% - 16px);
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+
+  .group-chat-text {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #777;
+  }
+
+  .button-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 3rem;
   }
 `;
 
@@ -365,22 +480,8 @@ const ModalButton = styled.button`
   background-color: #00956e;
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
+  padding: 10px 20px;
+  border-radius: 8px;
   cursor: pointer;
-  margin-top: 1rem;
-`;
-
-const PrivateCheckbox = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 1rem;
-
-  input {
-    margin-right: 0.5rem;
-  }
-
-  label {
-    font-size: 1rem;
-  }
+  margin-right: 1rem;
 `;
